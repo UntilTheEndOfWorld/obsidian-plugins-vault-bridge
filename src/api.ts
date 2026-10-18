@@ -118,7 +118,6 @@ export async function apiRequest<T>(
 	if (normalizedBase !== String(baseUrl ?? '').trim().replace(/\/+$/, '')) {
 		console.warn(`[VaultBridge] 服务地址已从管理后台改写为 API：${normalizedBase}`);
 	}
-	console.info(`[VaultBridge] ${method} ${url}`);
 
 	let response: RequestUrlResponse;
 	try {

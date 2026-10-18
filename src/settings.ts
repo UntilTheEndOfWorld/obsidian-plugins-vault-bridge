@@ -50,7 +50,7 @@ export interface VaultBridgeSettings {
 }
 
 export const DEFAULT_SETTINGS: VaultBridgeSettings = {
-	apiBaseUrl: 'http://127.0.0.1:8080',
+	apiBaseUrl: 'https://lycc.ltd/jx_slr_api',
 	bindCode: '',
 	userId: '',
 	accessToken: '',
@@ -161,7 +161,7 @@ export class VaultBridgeSettingTab extends PluginSettingTab {
 
 				t
 
-					.setPlaceholder('http://127.0.0.1:8080')
+					.setPlaceholder('https://lycc.ltd/jx_slr_api')
 
 					.setValue(this.plugin.settings.apiBaseUrl)
 
