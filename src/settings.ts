@@ -1,6 +1,6 @@
 import { App, Notice, Platform, PluginSettingTab, Setting } from 'obsidian';
 
-import type VaultBridgePlugin from './main';
+import type ObsyncBridgePlugin from './main';
 
 import { isBindClaimed } from './api';
 
@@ -22,7 +22,7 @@ import { getCurrentVaultPath, listObsidianVaults } from './vault-targets';
 
 
 
-export interface VaultBridgeSettings {
+export interface ObsyncBridgeSettings {
 	apiBaseUrl: string;
 	/** 短配对码（仅展示/换绑；业务鉴权用 accessToken） */
 	bindCode: string;
@@ -49,7 +49,7 @@ export interface VaultBridgeSettings {
 	claimed?: boolean;
 }
 
-export const DEFAULT_SETTINGS: VaultBridgeSettings = {
+export const DEFAULT_SETTINGS: ObsyncBridgeSettings = {
 	apiBaseUrl: 'https://lycc.ltd/jx_slr_api',
 	bindCode: '',
 	userId: '',
@@ -69,9 +69,9 @@ export const DEFAULT_SETTINGS: VaultBridgeSettings = {
 
 
 
-export class VaultBridgeSettingTab extends PluginSettingTab {
+export class ObsyncBridgeSettingTab extends PluginSettingTab {
 
-	plugin: VaultBridgePlugin;
+	plugin: ObsyncBridgePlugin;
 
 	bindCode = '';
 
@@ -81,7 +81,7 @@ export class VaultBridgeSettingTab extends PluginSettingTab {
 
 
 
-	constructor(app: App, plugin: VaultBridgePlugin) {
+	constructor(app: App, plugin: ObsyncBridgePlugin) {
 
 		super(app, plugin);
 
@@ -122,7 +122,7 @@ export class VaultBridgeSettingTab extends PluginSettingTab {
 			text: this.plugin.isPaired() ? '已配对' : '待配对',
 		});
 
-		hero.createEl('h1', { cls: 'vb-hero-title', text: 'VaultBridge' });
+		hero.createEl('h1', { cls: 'vb-hero-title', text: 'ObsyncBridge' });
 
 		hero.createEl('p', {
 			cls: 'vb-hero-desc',
@@ -244,7 +244,7 @@ export class VaultBridgeSettingTab extends PluginSettingTab {
 							this.display();
 						} catch (e) {
 							const msg = e instanceof Error ? e.message : String(e);
-							console.error('[VaultBridge] 生成配对码失败', e);
+							console.error('[ObsyncBridge] 生成配对码失败', e);
 							new Notice(`生成失败：${msg}`);
 							this.bindStatus = msg;
 							this.display();
@@ -285,7 +285,7 @@ export class VaultBridgeSettingTab extends PluginSettingTab {
 						new Notice('会员已激活');
 						this.display();
 					} catch (e) {
-						console.error('[VaultBridge] 激活邀请码失败', e);
+						console.error('[ObsyncBridge] 激活邀请码失败', e);
 						new Notice(`激活失败：${e instanceof Error ? e.message : String(e)}`);
 					}
 				}),
@@ -669,7 +669,7 @@ export class VaultBridgeSettingTab extends PluginSettingTab {
 					new Notice('已解除配对，请重新生成配对码');
 				} catch (e) {
 					const msg = e instanceof Error ? e.message : String(e);
-					console.error('[VaultBridge] 解除配对失败', e);
+					console.error('[ObsyncBridge] 解除配对失败', e);
 					new Notice(`解除失败：${msg}`);
 				} finally {
 					this.unbinding = false;

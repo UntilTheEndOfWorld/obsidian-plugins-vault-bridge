@@ -1,8 +1,8 @@
 # Privacy
 
-VaultBridge is a client for a companion service. This page describes what leaves your machine and what does not.
+ObsyncBridge is a client for a companion service. This page describes what leaves your machine and what does not.
 
-## What is sent to the VaultBridge service
+## What is sent to the ObsyncBridge service
 
 Only when you pair, pull links, or report results:
 

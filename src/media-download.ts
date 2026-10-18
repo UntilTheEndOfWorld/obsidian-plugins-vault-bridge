@@ -58,7 +58,7 @@ export async function downloadRemoteMedia(
 			const buffer = await downloadWithNodeHttps(httpsUrl, headers);
 			if (buffer && buffer.byteLength > 0) return buffer;
 		} catch (err) {
-			console.warn('VaultBridge node download failed, fallback to requestUrl', httpsUrl, err);
+			console.warn('ObsyncBridge node download failed, fallback to requestUrl', httpsUrl, err);
 		}
 	}
 
@@ -71,7 +71,7 @@ export async function downloadRemoteMedia(
 			return response.arrayBuffer;
 		}
 	} catch (err) {
-		console.warn('VaultBridge requestUrl download failed', httpsUrl, err);
+		console.warn('ObsyncBridge requestUrl download failed', httpsUrl, err);
 	}
 	return null;
 }

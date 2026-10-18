@@ -435,7 +435,7 @@ function parseTencentNextData(html: string): (ParsedWechatArticle & { parseError
 			contentKind: imgCount > 0 && markdown.length < 80 ? 'image_gallery' : 'standard',
 		};
 	} catch (err) {
-		console.warn('VaultBridge parse Tencent __NEXT_DATA__ failed', err);
+		console.warn('ObsyncBridge parse Tencent __NEXT_DATA__ failed', err);
 		return null;
 	}
 }
@@ -688,7 +688,7 @@ async function fetchXiaohongshu(
 		finalUrl = resolved.finalUrl || url;
 		html = resolved.html || '';
 	} catch (err) {
-		console.warn('VaultBridge xiaohongshu resolve failed', err);
+		console.warn('ObsyncBridge xiaohongshu resolve failed', err);
 	}
 
 	const ogTitle =
@@ -849,7 +849,7 @@ function parseXiaohongshuInitialState(html: string): {
 				: undefined,
 		};
 	} catch (err) {
-		console.warn('VaultBridge parse XHS state failed', err);
+		console.warn('ObsyncBridge parse XHS state failed', err);
 		return null;
 	}
 }

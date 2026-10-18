@@ -27,7 +27,7 @@ import {
 	sanitizeFileName,
 	SyncArticle,
 } from './markdown';
-import { DEFAULT_SETTINGS, VaultBridgeSettings, VaultBridgeSettingTab } from './settings';
+import { DEFAULT_SETTINGS, ObsyncBridgeSettings, ObsyncBridgeSettingTab } from './settings';
 import { migrateTopicProfiles, syncBuiltinTopicRules } from './topic-profiles';
 import { downloadRemoteMedia, forceHttpsUrl } from './media-download';
 import { createVaultIO, type VaultIO } from './vault-targets';
@@ -43,8 +43,8 @@ function createDeviceId(): string {
 	return `vb_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 10)}`;
 }
 
-export default class VaultBridgePlugin extends Plugin {
-	settings: VaultBridgeSettings = DEFAULT_SETTINGS;
+export default class ObsyncBridgePlugin extends Plugin {
+	settings: ObsyncBridgeSettings = DEFAULT_SETTINGS;
 	private statusBarEl: HTMLElement | null = null;
 	private lastSyncTime: Date | null = null;
 	private bindingPollInterval: number | undefined;
@@ -62,12 +62,12 @@ export default class VaultBridgePlugin extends Plugin {
 		this.statusBarEl.addClass('vb-statusbar');
 		this.updateStatusBar('idle');
 
-		this.addRibbonIcon('link', 'VaultBridge · 拉取链接', async () => {
+		this.addRibbonIcon('link', 'ObsyncBridge · 拉取链接', async () => {
 			await this.syncNow(true);
 		});
 
 		// 剪贴板导入暂时关闭，恢复时取消下面注释
-		// this.addRibbonIcon('clipboard-paste', 'VaultBridge · 剪贴板导入', async () => {
+		// this.addRibbonIcon('clipboard-paste', 'ObsyncBridge · 剪贴板导入', async () => {
 		// 	await this.importFromClipboard(true);
 		// });
 
@@ -80,7 +80,7 @@ export default class VaultBridgePlugin extends Plugin {
 		// 剪贴板导入暂时关闭，恢复时取消下面注释。命令 ID 保持 vaultbridge-clipboard-import，不要改名。
 		// this.addCommand({
 		// 	id: 'vaultbridge-clipboard-import',
-		// 	name: 'VaultBridge：剪贴板导入链接',
+		// 	name: 'ObsyncBridge：剪贴板导入链接',
 		// 	callback: async () => this.importFromClipboard(true),
 		// });
 
@@ -90,7 +90,7 @@ export default class VaultBridgePlugin extends Plugin {
 			callback: async () => this.organizeNotes(true),
 		});
 
-		this.addSettingTab(new VaultBridgeSettingTab(this.app, this));
+		this.addSettingTab(new ObsyncBridgeSettingTab(this.app, this));
 	}
 
 	onunload() {
@@ -98,7 +98,7 @@ export default class VaultBridgePlugin extends Plugin {
 	}
 
 	async loadSettings() {
-		const loaded = (await this.loadData()) as Partial<VaultBridgeSettings> & {
+		const loaded = (await this.loadData()) as Partial<ObsyncBridgeSettings> & {
 			subfolderByKeywords?: boolean;
 			keywordRules?: string;
 			useBuiltinTopicGroups?: boolean;
@@ -110,7 +110,7 @@ export default class VaultBridgePlugin extends Plugin {
 		if (migratedApiBase && migratedApiBase !== this.settings.apiBaseUrl) {
 			this.settings.apiBaseUrl = migratedApiBase;
 			await this.saveSettings();
-			new Notice('VaultBridge：服务地址已从管理后台改为 API 地址');
+			new Notice('ObsyncBridge：服务地址已从管理后台改为 API 地址');
 		}
 		if (loaded.subfolderByKeywords !== undefined && loaded.subfolderByAutoKeywords === undefined) {
 			this.settings.subfolderByAutoKeywords = loaded.subfolderByKeywords;
@@ -128,7 +128,7 @@ export default class VaultBridgePlugin extends Plugin {
 			this.settings.builtinTopicRulesVersion = synced.version;
 			await this.saveSettings();
 		}
-		const raw = this.settings as VaultBridgeSettings & { syncIntervalMinutes?: number; token?: string };
+		const raw = this.settings as ObsyncBridgeSettings & { syncIntervalMinutes?: number; token?: string };
 		if ('syncIntervalMinutes' in raw) {
 			delete raw.syncIntervalMinutes;
 			await this.saveSettings();
@@ -141,7 +141,7 @@ export default class VaultBridgePlugin extends Plugin {
 			this.settings.accessToken = '';
 			this.settings.claimed = false;
 			await this.saveSettings();
-			new Notice('VaultBridge：鉴权已升级为短码配对 + 长 Token，请重新生成配对码');
+			new Notice('ObsyncBridge：鉴权已升级为短码配对 + 长 Token，请重新生成配对码');
 		}
 	}
 
@@ -210,7 +210,7 @@ export default class VaultBridgePlugin extends Plugin {
 						await this.saveSettings();
 						window.clearInterval(this.bindingPollInterval);
 						this.bindingPollInterval = undefined;
-						new Notice('VaultBridge 配对成功，请手动拉取链接');
+						new Notice('ObsyncBridge 配对成功，请手动拉取链接');
 					}
 					if (
 						status?.status === 'invalid' ||
@@ -222,7 +222,7 @@ export default class VaultBridgePlugin extends Plugin {
 					}
 					onStatus(status);
 				} catch (error) {
-					console.error('VaultBridge binding poll failed', error);
+					console.error('ObsyncBridge binding poll failed', error);
 				}
 			})();
 		}, 2500);
@@ -389,7 +389,7 @@ export default class VaultBridgePlugin extends Plugin {
 						title: payload.title,
 					});
 				} catch (err) {
-					console.error(`VaultBridge sync failed: ${article.id}`, err);
+					console.error(`ObsyncBridge sync failed: ${article.id}`, err);
 					failed += 1;
 					ackResults.push({
 						id: article.id,
@@ -416,7 +416,7 @@ export default class VaultBridgePlugin extends Plugin {
 					}
 				}
 			} catch (e) {
-				console.error('VaultBridge ack-batch failed', e);
+				console.error('ObsyncBridge ack-batch failed', e);
 				if (showNotice) {
 					new Notice(`结果回写失败：${e instanceof Error ? e.message : String(e)}`);
 				}
@@ -429,10 +429,10 @@ export default class VaultBridgePlugin extends Plugin {
 				if (updated > 0) parts.push(`更新 ${updated}`);
 				if (failed > 0) parts.push(`失败 ${failed}`);
 				const targetHint = io.isExternal ? ` → ${io.label}` : '';
-				new Notice(`VaultBridge：${parts.join('，') || '完成'}${targetHint}`);
+				new Notice(`ObsyncBridge：${parts.join('，') || '完成'}${targetHint}`);
 			}
 		} catch (error) {
-			console.error('VaultBridge sync failed', error);
+			console.error('ObsyncBridge sync failed', error);
 			this.updateStatusBar('error');
 			if (isBindAuthLostError(error)) {
 				await this.clearPairingLocal();
@@ -564,7 +564,7 @@ export default class VaultBridgePlugin extends Plugin {
 					article,
 				);
 			} catch (err) {
-				console.warn('VaultBridge media localize failed', err);
+				console.warn('ObsyncBridge media localize failed', err);
 			}
 		}
 		await target.writeText(path, content);
@@ -717,7 +717,7 @@ export default class VaultBridgePlugin extends Plugin {
 					// 用库根维基链接，避免相对路径空格被 Markdown 截断
 					result = result.replace(hit.fullMatch, `\n![[${vaultPath}]]\n`);
 				} catch (err) {
-					console.warn(`VaultBridge image download failed: ${hit.url}`, err);
+					console.warn(`ObsyncBridge image download failed: ${hit.url}`, err);
 					seq -= 1;
 				}
 				continue;
@@ -744,7 +744,7 @@ export default class VaultBridgePlugin extends Plugin {
 						break;
 					}
 				} catch (err) {
-					console.warn(`VaultBridge video download failed: ${candidate}`, err);
+					console.warn(`ObsyncBridge video download failed: ${candidate}`, err);
 				}
 			}
 
@@ -763,7 +763,7 @@ export default class VaultBridgePlugin extends Plugin {
 				await target.writeBinary(vaultPath, buffer);
 				result = result.replace(hit.fullMatch, `\n![[${vaultPath}]]\n`);
 			} catch (err) {
-				console.warn(`VaultBridge video write failed: ${hit.url}`, err);
+				console.warn(`ObsyncBridge video write failed: ${hit.url}`, err);
 				result = result.replace(
 					hit.fullMatch,
 					`\n[视频原文（本地写入失败）](${forceHttpsUrl(hit.url)})\n`,
@@ -776,7 +776,7 @@ export default class VaultBridgePlugin extends Plugin {
 
 	private updateStatusBar(status: 'idle' | 'syncing' | 'success' | 'error', detail?: string) {
 		if (!this.statusBarEl) return;
-		const prefix = 'VaultBridge';
+		const prefix = 'ObsyncBridge';
 		if (status === 'syncing') {
 			this.statusBarEl.setText(detail ? `${prefix} · ${detail}` : `${prefix} · 处理中…`);
 		} else if (status === 'success') {
