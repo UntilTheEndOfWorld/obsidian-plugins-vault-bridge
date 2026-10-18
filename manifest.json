@@ -1,7 +1,7 @@
 {
-	"id": "vault-bridge",
+	"id": "vaultbridge",
 	"name": "VaultBridge",
-	"version": "1.7.0",
+	"version": "1.7.1",
 	"minAppVersion": "1.5.0",
 	"description": "Pull article links from a WeChat Mini Program and archive them as Markdown notes with local images.",
 	"author": "UntilTheEndOfWorld",
