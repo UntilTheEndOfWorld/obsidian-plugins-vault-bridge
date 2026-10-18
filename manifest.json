@@ -3,8 +3,8 @@
 	"name": "VaultBridge",
 	"version": "1.7.0",
 	"minAppVersion": "1.5.0",
-	"description": "通过配对码连接微信小程序，手动拉取公众号链接并在本机归档为 Markdown。",
-	"author": "VaultBridge",
-	"authorUrl": "",
-	"isDesktopOnly": false
+	"description": "Pull article links from a WeChat Mini Program and archive them as Markdown notes with local images.",
+	"author": "UntilTheEndOfWorld",
+	"authorUrl": "https://github.com/UntilTheEndOfWorld",
+	"isDesktopOnly": true
 }

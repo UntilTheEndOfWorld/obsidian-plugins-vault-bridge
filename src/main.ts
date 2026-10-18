@@ -72,8 +72,8 @@ export default class VaultBridgePlugin extends Plugin {
 		// });
 
 		this.addCommand({
-			id: 'vaultbridge-pull-links',
-			name: 'VaultBridge：拉取待处理链接',
+			id: 'pull-links',
+			name: '拉取待处理链接',
 			callback: async () => this.syncNow(true),
 		});
 
@@ -85,8 +85,8 @@ export default class VaultBridgePlugin extends Plugin {
 		// });
 
 		this.addCommand({
-			id: 'vaultbridge-organize-notes',
-			name: 'VaultBridge：整理微信文章笔记',
+			id: 'organize-notes',
+			name: '整理微信文章笔记',
 			callback: async () => this.organizeNotes(true),
 		});
 
@@ -388,9 +388,6 @@ export default class VaultBridgePlugin extends Plugin {
 						writtenPath: path,
 						title: payload.title,
 					});
-					console.log(
-						`VaultBridge 同步完成 [${i + 1}/${articles.length}]：${payload.title || '(无标题)'} → [${io.label}] ${path}`,
-					);
 				} catch (err) {
 					console.error(`VaultBridge sync failed: ${article.id}`, err);
 					failed += 1;
@@ -488,7 +485,6 @@ export default class VaultBridgePlugin extends Plugin {
 			}
 
 			this.updateStatusBar('success');
-			console.log(`VaultBridge 同步完成：${article.title || '(无标题)'} → [${io.label}] ${path}`);
 			if (showNotice) {
 				const targetHint = io.isExternal ? `\n仓库：${io.label}` : '';
 				const warn = article.parseError ? `\n提示：${article.parseError}` : '';

@@ -18,5 +18,11 @@ main.js
 # obsidian
 data.json
 
+# local dev-only helper scripts (not part of the plugin)
+scripts/
+
+# local logs
+*.log
+
 # Exclude macOS Finder (System Explorer) View States
 .DS_Store
