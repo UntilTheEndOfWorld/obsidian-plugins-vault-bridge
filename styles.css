@@ -1,0 +1,381 @@
+/* VaultBridge — 独立视觉，与第三方 Obsync 插件区分 */
+
+.vb-settings-root {
+	--vb-accent: #3d6b4f;
+	--vb-accent-soft: rgba(61, 107, 79, 0.12);
+	--vb-border: var(--background-modifier-border);
+	--vb-card-gap: 1.35rem;
+	padding: 3rem 0.5rem 2rem;
+}
+
+.vb-hero {
+	position: relative;
+	padding: 1.4rem 1.35rem 1.2rem;
+	margin: 0 0 var(--vb-card-gap);
+	border-radius: 14px;
+	background: linear-gradient(135deg, var(--vb-accent-soft) 0%, transparent 55%),
+		var(--background-secondary);
+	border: 1px solid var(--vb-border);
+}
+
+.vb-hero-badge {
+	display: inline-block;
+	font-size: 0.72rem;
+	font-weight: 600;
+	letter-spacing: 0.06em;
+	text-transform: uppercase;
+	padding: 0.2rem 0.55rem;
+	border-radius: 999px;
+	background: var(--vb-accent);
+	color: #fff;
+	margin-bottom: 0.6rem;
+}
+
+.vb-hero-title {
+	margin: 0 0 0.35rem;
+	font-size: 1.55rem;
+	font-weight: 700;
+	letter-spacing: -0.02em;
+	color: var(--text-normal);
+}
+
+.vb-hero-desc {
+	margin: 0;
+	font-size: 0.88rem;
+	line-height: 1.55;
+	color: var(--text-muted);
+	max-width: 36rem;
+}
+
+.vb-hero-meta {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.5rem 1rem;
+	margin-top: 0.85rem;
+	font-size: 0.8rem;
+	color: var(--text-muted);
+}
+
+.vb-hero-meta span::before {
+	content: '●';
+	margin-right: 0.35rem;
+	color: var(--vb-accent);
+	font-size: 0.55rem;
+	vertical-align: middle;
+}
+
+.vb-card {
+	margin: 0 0 var(--vb-card-gap);
+	padding: 0.55rem 1.2rem 0.9rem;
+	--vb-content-inset: 0.55rem;
+	border-radius: 14px;
+	border: 1px solid var(--vb-border);
+	background: linear-gradient(135deg, var(--vb-accent-soft) 0%, transparent 55%),
+		var(--background-secondary);
+	box-shadow: 0 1px 0 rgba(0, 0, 0, 0.03);
+}
+
+.vb-card-title {
+	margin: 0.65rem 0 0.35rem;
+	padding: 0 var(--vb-content-inset) 0.4rem;
+	font-size: 0.95rem;
+	font-weight: 650;
+	color: var(--text-normal);
+	border-bottom: 1px solid var(--background-modifier-border-hover);
+}
+
+.vb-bind-box {
+	margin: 0.5rem 0.15rem 0;
+	padding: 0.85rem 1rem;
+	border-radius: 10px;
+	background: linear-gradient(135deg, var(--vb-accent-soft) 0%, transparent 60%),
+		var(--background-primary);
+	border: 1px solid var(--vb-border);
+}
+
+.vb-bind-hint {
+	margin: 0 0 0.5rem;
+	font-size: 0.82rem;
+	color: var(--text-muted);
+	line-height: 1.45;
+}
+
+.vb-bind-code {
+	font-family: var(--font-monospace);
+	font-size: 2rem;
+	font-weight: 700;
+	letter-spacing: 0.35em;
+	text-align: center;
+	padding: 0.75rem 0.5rem;
+	margin: 0.5rem 0 0.25rem;
+	border-radius: 10px;
+	background: var(--background-primary);
+	border: 2px dashed var(--vb-accent);
+	color: var(--vb-accent);
+}
+
+.vb-bind-status {
+	text-align: center;
+	font-size: 0.78rem;
+	color: var(--text-faint);
+	margin-bottom: 0.25rem;
+}
+
+.vb-action-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+	gap: 0.65rem;
+	margin: 0.75rem 0 0.35rem;
+}
+
+.vb-action-item {
+	display: flex;
+	flex-direction: column;
+	gap: 0.2rem;
+	padding: 0.85rem 0.9rem;
+	border-radius: 10px;
+	border: 1px solid var(--vb-border);
+	background: linear-gradient(135deg, var(--vb-accent-soft) 0%, transparent 65%),
+		var(--background-primary);
+	cursor: pointer;
+	transition: border-color 0.15s, background 0.15s, transform 0.1s;
+}
+
+.vb-action-item:hover {
+	border-color: var(--vb-accent);
+	background: linear-gradient(135deg, rgba(61, 107, 79, 0.18) 0%, transparent 55%),
+		var(--background-secondary);
+	transform: translateY(-1px);
+}
+
+.vb-action-item.is-disabled {
+	opacity: 0.45;
+	cursor: not-allowed;
+	pointer-events: none;
+	filter: grayscale(0.25);
+}
+
+.vb-action-item.is-disabled:hover {
+	border-color: var(--vb-border);
+	background: linear-gradient(135deg, var(--vb-accent-soft) 0%, transparent 65%),
+		var(--background-primary);
+	transform: none;
+}
+
+.vb-action-item.vb-action-danger:hover {
+	border-color: var(--text-error);
+	background: rgba(200, 60, 60, 0.08);
+}
+
+.vb-action-item.vb-action-danger.is-disabled:hover {
+	border-color: var(--vb-border);
+	background: linear-gradient(135deg, var(--vb-accent-soft) 0%, transparent 65%),
+		var(--background-primary);
+}
+
+.vb-action-title {
+	font-size: 0.9rem;
+	font-weight: 600;
+	color: var(--text-normal);
+}
+
+.vb-action-desc {
+	font-size: 0.75rem;
+	line-height: 1.4;
+	color: var(--text-muted);
+}
+
+.vb-statusbar {
+	font-size: 0.78rem;
+	opacity: 0.85;
+}
+
+/* 卡片内 Setting 行距与左右留白 */
+.vb-card .setting-item {
+	border-top: none;
+	padding: 0.7rem var(--vb-content-inset);
+}
+
+.vb-card .setting-item-info {
+	padding-left: 0;
+	padding-right: 0.65rem;
+}
+
+.vb-card .setting-item-name,
+.vb-card .setting-item-description {
+	margin-left: 0;
+	padding-left: 0;
+}
+
+.vb-card .setting-item-control {
+	padding-right: 0;
+}
+
+.vb-topic-groups-input {
+	width: 100%;
+	min-height: 5rem;
+}
+
+.vb-topic-modal {
+	max-width: 46rem;
+}
+
+.vb-rule-header {
+	display: grid;
+	grid-template-columns: minmax(7rem, 0.9fr) auto minmax(10rem, 1.6fr) 3.5rem;
+	gap: 0.5rem;
+	align-items: center;
+	padding: 0 0.15rem 0.4rem;
+	font-size: 0.78rem;
+	font-weight: 600;
+	color: var(--text-muted);
+}
+
+.vb-rule-list {
+	display: flex;
+	flex-direction: column;
+	gap: 0.45rem;
+	max-height: min(55vh, 28rem);
+	overflow-y: auto;
+	padding: 0.15rem 0.1rem 0.35rem;
+}
+
+.vb-rule-row {
+	display: grid;
+	grid-template-columns: minmax(7rem, 0.9fr) auto minmax(10rem, 1.6fr) 3.5rem;
+	gap: 0.5rem;
+	align-items: center;
+}
+
+.vb-rule-eq {
+	text-align: center;
+	font-weight: 700;
+	color: var(--text-muted);
+	user-select: none;
+}
+
+.vb-rule-folder,
+.vb-rule-keywords {
+	width: 100%;
+	padding: 0.4rem 0.55rem;
+	border-radius: 6px;
+	border: 1px solid var(--background-modifier-border);
+	background: var(--background-primary);
+	color: var(--text-normal);
+	font-size: 0.85rem;
+}
+
+.vb-rule-folder:focus,
+.vb-rule-keywords:focus {
+	outline: none;
+	border-color: var(--vb-accent, var(--interactive-accent));
+}
+
+.vb-rule-delete-btn {
+	font-size: 0.75rem;
+	padding: 0.25rem 0.4rem;
+	color: var(--text-muted);
+}
+
+.vb-rule-delete-btn:hover {
+	color: var(--text-error);
+}
+
+.vb-topic-modal-actions {
+	margin: 0.75rem 0 0.35rem;
+}
+
+.vb-rule-add-btn {
+	font-size: 0.82rem;
+}
+
+.vb-topic-section {
+	margin: 0.35rem 0 0.55rem;
+	padding: 0.7rem var(--vb-content-inset);
+	border-radius: 10px;
+	background: var(--background-primary);
+	border: 1px solid var(--background-modifier-border);
+}
+
+.vb-topic-section-title {
+	margin: 0 0 0.35rem;
+	padding: 0;
+	font-size: 0.9rem;
+	font-weight: 650;
+	line-height: 1.35;
+	color: var(--text-normal);
+}
+
+.vb-topic-section-desc {
+	margin: 0 0 0.75rem;
+	padding: 0;
+	font-size: 0.78rem;
+	line-height: 1.45;
+	color: var(--text-muted);
+}
+
+.vb-topic-list {
+	display: flex;
+	flex-direction: column;
+	gap: 0.55rem;
+	padding: 0;
+}
+
+.vb-topic-row {
+	display: grid;
+	grid-template-columns: 1fr auto auto;
+	align-items: center;
+	gap: 0.65rem;
+	padding: 0.65rem 0.75rem;
+	border-radius: 8px;
+	border: 1px solid var(--background-modifier-border);
+	background: var(--background-secondary);
+}
+
+.vb-topic-row-name {
+	font-size: 0.88rem;
+	font-weight: 600;
+	color: var(--text-normal);
+}
+
+.vb-topic-row-actions {
+	display: flex;
+	gap: 0.35rem;
+	flex-wrap: wrap;
+}
+
+.vb-topic-config-btn,
+.vb-topic-delete-btn {
+	font-size: 0.78rem;
+	padding: 0.25rem 0.55rem;
+}
+
+.vb-topic-row-toggle .setting-item {
+	padding: 0;
+	margin: 0;
+	border: none;
+}
+
+.vb-topic-row-toggle .setting-item-info {
+	display: none;
+}
+
+.vb-topic-add-row {
+	margin-top: 0.75rem;
+	padding: 0;
+}
+
+.vb-topic-add-btn {
+	font-size: 0.82rem;
+}
+
+.vb-topic-modal-hint {
+	margin: 0 0 0.75rem;
+	font-size: 0.82rem;
+	line-height: 1.45;
+	color: var(--text-muted);
+}
+
+.vb-card .setting-item + .setting-item {
+	border-top: 1px solid var(--background-modifier-border);
+}
