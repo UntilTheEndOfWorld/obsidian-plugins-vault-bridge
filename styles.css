@@ -33,6 +33,11 @@
 
 .vb-hero-title {
 	margin: 0 0 0.35rem;
+	padding: 0;
+	border: 0;
+}
+
+.vb-hero-title .setting-item-name {
 	font-size: 1.55rem;
 	font-weight: 700;
 	letter-spacing: -0.02em;
@@ -78,10 +83,14 @@
 .vb-card-title {
 	margin: 0.65rem 0 0.35rem;
 	padding: 0 var(--vb-content-inset) 0.4rem;
+	border: 0;
+	border-bottom: 1px solid var(--background-modifier-border-hover);
+}
+
+.vb-card-title .setting-item-name {
 	font-size: 0.95rem;
 	font-weight: 650;
 	color: var(--text-normal);
-	border-bottom: 1px solid var(--background-modifier-border-hover);
 }
 
 .vb-bind-box {
@@ -300,6 +309,10 @@
 .vb-topic-section-title {
 	margin: 0 0 0.35rem;
 	padding: 0;
+	border: 0;
+}
+
+.vb-topic-section-title .setting-item-name {
 	font-size: 0.9rem;
 	font-weight: 650;
 	line-height: 1.35;

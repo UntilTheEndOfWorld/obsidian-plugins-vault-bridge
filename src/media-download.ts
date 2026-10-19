@@ -58,7 +58,7 @@ export async function downloadRemoteMedia(
 			const buffer = await downloadWithNodeHttps(httpsUrl, headers);
 			if (buffer && buffer.byteLength > 0) return buffer;
 		} catch (err) {
-			console.warn('ObsyncBridge node download failed, fallback to requestUrl', httpsUrl, err);
+			console.warn('SyncBridge node download failed, fallback to requestUrl', httpsUrl, err);
 		}
 	}
 
@@ -71,7 +71,7 @@ export async function downloadRemoteMedia(
 			return response.arrayBuffer;
 		}
 	} catch (err) {
-		console.warn('ObsyncBridge requestUrl download failed', httpsUrl, err);
+		console.warn('SyncBridge requestUrl download failed', httpsUrl, err);
 	}
 	return null;
 }
@@ -104,7 +104,7 @@ function downloadWithNodeHttps(
 		let httpsMod: NodeHttpModule | null = null;
 		let httpMod: NodeHttpModule | null = null;
 		try {
-			const reqFn = (globalThis as { require?: (id: string) => unknown }).require;
+			const reqFn = (window as { require?: (id: string) => unknown }).require;
 			if (!reqFn) {
 				reject(new Error('Node require unavailable'));
 				return;

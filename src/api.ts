@@ -116,7 +116,7 @@ export async function apiRequest<T>(
 	const normalizedBase = migrateApiBaseUrl(baseUrl);
 	const url = `${normalizedBase}${path.startsWith('/') ? path : `/${path}`}`;
 	if (normalizedBase !== String(baseUrl ?? '').trim().replace(/\/+$/, '')) {
-		console.warn(`[ObsyncBridge] 服务地址已从管理后台改写为 API：${normalizedBase}`);
+		console.warn(`[SyncBridge] 服务地址已从管理后台改写为 API：${normalizedBase}`);
 	}
 
 	let response: RequestUrlResponse;
@@ -130,14 +130,14 @@ export async function apiRequest<T>(
 			throw: false,
 		});
 	} catch (error) {
-		console.error(`[ObsyncBridge] ${method} ${url} 请求未完成`, error);
+		console.error(`[SyncBridge] ${method} ${url} 请求未完成`, error);
 		throw error;
 	}
 
 	const bodyText = typeof response?.text === 'string' ? response.text : '';
 	const status = response?.status ?? 0;
 	if (status < 200 || status >= 300) {
-		console.error(`[ObsyncBridge] ${method} ${url} -> ${status}`, bodyText.slice(0, 300));
+		console.error(`[SyncBridge] ${method} ${url} -> ${status}`, bodyText.slice(0, 300));
 		if (status === 405) {
 			throw new Error(
 				`API 405：${method} ${url} 被拒绝。服务地址不要填管理后台 /jx_slr_admin，应使用 https://lycc.ltd/jx_slr_api。该 405 由 Nginx 直接返回，Java 控制台不会有日志。`,
@@ -149,7 +149,7 @@ export async function apiRequest<T>(
 	const trimmedText = bodyText.trimStart();
 	const contentType = String(response?.headers?.['content-type'] || response?.headers?.['Content-Type'] || '');
 	if (trimmedText.startsWith('<') || /text\/html/i.test(contentType)) {
-		console.error(`[ObsyncBridge] ${method} ${url} 返回了网页而不是 JSON`);
+		console.error(`[SyncBridge] ${method} ${url} 返回了网页而不是 JSON`);
 		throw new Error(
 			`接口返回了网页：${url}。请把服务地址改成 https://lycc.ltd/jx_slr_api，不要使用管理后台 /jx_slr_admin。`,
 		);

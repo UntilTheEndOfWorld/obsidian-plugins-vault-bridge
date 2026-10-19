@@ -1,4 +1,4 @@
-# ObsyncBridge
+# SyncBridge
 
 Pull article links from a WeChat Mini Program and archive them into Obsidian as Markdown notes. Syncing is **manual only**: nothing is fetched in the background, and article bodies and images are downloaded to your own machine.
 
@@ -18,7 +18,7 @@ Pull article links from a WeChat Mini Program and archive them into Obsidian as 
 - Obsidian **1.5.0** or later.
 - **Desktop only.** The plugin uses Node.js file-system APIs (`fs`, `path`) to write into other local vaults and to list them, so it does not run on mobile.
 - A WeChat account, to claim the pairing code in the companion Mini Program.
-- Network access to the ObsyncBridge service and to the article pages you archive.
+- Network access to the SyncBridge service and to the article pages you archive.
 
 ## Installation
 
@@ -26,13 +26,13 @@ The plugin is not in the community directory yet. To install it now:
 
 1. Download `main.js`, `manifest.json` and `styles.css` from the latest GitHub release.
 2. Create `<your-vault>/.obsidian/plugins/vault-bridge/` and copy the three files into it.
-3. Reload Obsidian, then enable **ObsyncBridge** in **Settings → Community plugins**.
+3. Reload Obsidian, then enable **SyncBridge** in **Settings → Community plugins**.
 
 If you use [BRAT](https://github.com/TfTHacker/obsidian42-brat), add `UntilTheEndOfWorld/obsidian-plugins-vault-bridge` as a beta plugin instead.
 
 ## Usage
 
-1. Open **Settings → ObsyncBridge** and confirm the service URL (default `https://lycc.ltd/jx_slr_api`).
+1. Open **Settings → SyncBridge** and confirm the service URL (default `https://lycc.ltd/jx_slr_api`).
 2. Select **Generate pairing code**, then claim that code in the WeChat Mini Program.
 3. Once paired, click the link icon in the ribbon or run **Pull pending links** from the command palette.
 4. Notes are written to the archive folder; run **Organize WeChat notes** afterwards to re-sort existing notes using your current rules.
@@ -41,7 +41,7 @@ If you use [BRAT](https://github.com/TfTHacker/obsidian42-brat), add `UntilTheEn
 
 | Setting | Description |
 | --- | --- |
-| Service URL | Base URL of the ObsyncBridge API. |
+| Service URL | Base URL of the SyncBridge API. |
 | Pairing | Pairing code, pairing status and account binding. |
 | Archive folder | Vault-relative folder that receives imported notes. |
 | Target vault | Current vault, or another local vault registered in Obsidian. |
@@ -62,7 +62,7 @@ A note whose title contains `MySQL` is written to `Archive/Database/` (combined 
 
 ## Network use
 
-ObsyncBridge talks to the following remote services, and only when you trigger an action:
+SyncBridge talks to the following remote services, and only when you trigger an action:
 
 - **`https://lycc.ltd/jx_slr_api`** (configurable) – pairing, pulling the pending link queue, and reporting per-article sync results.
 - **Article pages** such as `mp.weixin.qq.com`, requested directly from Obsidian to parse the article body.

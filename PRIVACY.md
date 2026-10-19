@@ -1,8 +1,8 @@
 # Privacy
 
-ObsyncBridge is a client for a companion service. This page describes what leaves your machine and what does not.
+SyncBridge is a client for a companion service. This page describes what leaves your machine and what does not.
 
-## What is sent to the ObsyncBridge service
+## What is sent to the SyncBridge service
 
 Only when you pair, pull links, or report results:
 

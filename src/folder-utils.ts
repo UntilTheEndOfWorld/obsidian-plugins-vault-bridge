@@ -41,5 +41,5 @@ export async function uniquePathInFolder(
 }
 
 export function sleepTick(): Promise<void> {
-	return new Promise((resolve) => setTimeout(resolve, 0));
+	return new Promise((resolve) => window.setTimeout(resolve, 0));
 }

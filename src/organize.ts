@@ -1,5 +1,5 @@
 import { normalizePath, TFile, TFolder, type App } from 'obsidian';
-import type { ObsyncBridgeSettings } from './settings';
+import type { SyncBridgeSettings } from './settings';
 import {
 	buildVaultKeywordIndex,
 	buildTopicGroupsFromProfiles,
@@ -19,7 +19,7 @@ export interface OrganizeResult {
 }
 
 /** 统计待整理数量（散放 +「未分类」+ 可重归类子目录） */
-export function countLooseWechatNotes(app: App, settings: ObsyncBridgeSettings): number {
+export function countLooseWechatNotes(app: App, settings: SyncBridgeSettings): number {
 	return listOrganizableMarkdownFiles(app, settings).length;
 }
 
@@ -31,7 +31,7 @@ export function countLooseWechatNotes(app: App, settings: ObsyncBridgeSettings):
  */
 export async function organizeLooseWechatArticles(
 	app: App,
-	settings: ObsyncBridgeSettings,
+	settings: SyncBridgeSettings,
 	onProgress?: (message: string) => void,
 ): Promise<OrganizeResult> {
 	const result: OrganizeResult = { scanned: 0, moved: 0, skipped: 0, errors: 0 };
@@ -112,7 +112,7 @@ export async function organizeLooseWechatArticles(
 				await sleepTick();
 			}
 		} catch (err) {
-			console.error('ObsyncBridge organize failed for', file.path, err);
+			console.error('SyncBridge organize failed for', file.path, err);
 			result.errors++;
 		}
 
@@ -122,7 +122,7 @@ export async function organizeLooseWechatArticles(
 	return result;
 }
 
-function listOrganizableMarkdownFiles(app: App, settings: ObsyncBridgeSettings): TFile[] {
+function listOrganizableMarkdownFiles(app: App, settings: SyncBridgeSettings): TFile[] {
 	const base = normalizePath(settings.syncFolder || '');
 	const root = app.vault.getAbstractFileByPath(base);
 	if (!(root instanceof TFolder)) return [];
@@ -136,7 +136,7 @@ function collectOrganizable(
 	app: App,
 	folder: TFolder,
 	syncBase: string,
-	settings: ObsyncBridgeSettings,
+	settings: SyncBridgeSettings,
 	out: TFile[],
 ) {
 	for (const child of folder.children) {
@@ -170,7 +170,7 @@ function isOrganizableArticle(
 	app: App,
 	file: TFile,
 	syncBase: string,
-	settings: ObsyncBridgeSettings,
+	settings: SyncBridgeSettings,
 ): boolean {
 	const parentPath = file.parent?.path;
 	if (!parentPath) return false;

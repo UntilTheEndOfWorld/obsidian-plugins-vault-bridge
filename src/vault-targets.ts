@@ -71,7 +71,7 @@ export function listObsidianVaults(currentPath: string | null): VaultOption[] {
 		});
 		return options;
 	} catch (err) {
-		console.warn('ObsyncBridge list vaults failed', err);
+		console.warn('SyncBridge list vaults failed', err);
 		return [];
 	}
 }

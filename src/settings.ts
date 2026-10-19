@@ -1,6 +1,6 @@
 import { App, Notice, Platform, PluginSettingTab, Setting } from 'obsidian';
 
-import type ObsyncBridgePlugin from './main';
+import type SyncBridgePlugin from './main';
 
 import { isBindClaimed } from './api';
 
@@ -20,9 +20,11 @@ import {
 
 import { getCurrentVaultPath, listObsidianVaults } from './vault-targets';
 
+function addSettingsHeading(parent: HTMLElement, text: string, cls: string): void {
+	new Setting(parent).setName(text).setHeading().settingEl.addClass(cls);
+}
 
-
-export interface ObsyncBridgeSettings {
+export interface SyncBridgeSettings {
 	apiBaseUrl: string;
 	/** 短配对码（仅展示/换绑；业务鉴权用 accessToken） */
 	bindCode: string;
@@ -49,7 +51,7 @@ export interface ObsyncBridgeSettings {
 	claimed?: boolean;
 }
 
-export const DEFAULT_SETTINGS: ObsyncBridgeSettings = {
+export const DEFAULT_SETTINGS: SyncBridgeSettings = {
 	apiBaseUrl: 'https://lycc.ltd/jx_slr_api',
 	bindCode: '',
 	userId: '',
@@ -69,9 +71,9 @@ export const DEFAULT_SETTINGS: ObsyncBridgeSettings = {
 
 
 
-export class ObsyncBridgeSettingTab extends PluginSettingTab {
+export class SyncBridgeSettingTab extends PluginSettingTab {
 
-	plugin: ObsyncBridgePlugin;
+	plugin: SyncBridgePlugin;
 
 	bindCode = '';
 
@@ -81,7 +83,7 @@ export class ObsyncBridgeSettingTab extends PluginSettingTab {
 
 
 
-	constructor(app: App, plugin: ObsyncBridgePlugin) {
+	constructor(app: App, plugin: SyncBridgePlugin) {
 
 		super(app, plugin);
 
@@ -122,7 +124,7 @@ export class ObsyncBridgeSettingTab extends PluginSettingTab {
 			text: this.plugin.isPaired() ? '已配对' : '待配对',
 		});
 
-		hero.createEl('h1', { cls: 'vb-hero-title', text: 'ObsyncBridge' });
+		addSettingsHeading(hero, 'SyncBridge', 'vb-hero-title');
 
 		hero.createEl('p', {
 			cls: 'vb-hero-desc',
@@ -147,7 +149,7 @@ export class ObsyncBridgeSettingTab extends PluginSettingTab {
 
 		const card = root.createDiv({ cls: 'vb-card' });
 
-		card.createEl('h2', { cls: 'vb-card-title', text: '连接与配对' });
+		addSettingsHeading(card, '连接与配对', 'vb-card-title');
 
 
 
@@ -244,7 +246,7 @@ export class ObsyncBridgeSettingTab extends PluginSettingTab {
 							this.display();
 						} catch (e) {
 							const msg = e instanceof Error ? e.message : String(e);
-							console.error('[ObsyncBridge] 生成配对码失败', e);
+							console.error('[SyncBridge] 生成配对码失败', e);
 							new Notice(`生成失败：${msg}`);
 							this.bindStatus = msg;
 							this.display();
@@ -285,7 +287,7 @@ export class ObsyncBridgeSettingTab extends PluginSettingTab {
 						new Notice('会员已激活');
 						this.display();
 					} catch (e) {
-						console.error('[ObsyncBridge] 激活邀请码失败', e);
+						console.error('[SyncBridge] 激活邀请码失败', e);
 						new Notice(`激活失败：${e instanceof Error ? e.message : String(e)}`);
 					}
 				}),
@@ -299,7 +301,7 @@ export class ObsyncBridgeSettingTab extends PluginSettingTab {
 
 		const card = root.createDiv({ cls: 'vb-card' });
 
-		card.createEl('h2', { cls: 'vb-card-title', text: '归档规则' });
+		addSettingsHeading(card, '归档规则', 'vb-card-title');
 
 
 
@@ -481,7 +483,7 @@ export class ObsyncBridgeSettingTab extends PluginSettingTab {
 
 		const section = card.createDiv({ cls: 'vb-topic-section' });
 
-		section.createEl('h3', { cls: 'vb-topic-section-title', text: '自定义主题分组' });
+		addSettingsHeading(section, '自定义主题分组', 'vb-topic-section-title');
 
 		section.createEl('p', {
 
@@ -619,7 +621,7 @@ export class ObsyncBridgeSettingTab extends PluginSettingTab {
 
 		const card = root.createDiv({ cls: 'vb-card vb-card-actions' });
 
-		card.createEl('h2', { cls: 'vb-card-title', text: '手动操作' });
+		addSettingsHeading(card, '手动操作', 'vb-card-title');
 
 
 
@@ -669,7 +671,7 @@ export class ObsyncBridgeSettingTab extends PluginSettingTab {
 					new Notice('已解除配对，请重新生成配对码');
 				} catch (e) {
 					const msg = e instanceof Error ? e.message : String(e);
-					console.error('[ObsyncBridge] 解除配对失败', e);
+					console.error('[SyncBridge] 解除配对失败', e);
 					new Notice(`解除失败：${msg}`);
 				} finally {
 					this.unbinding = false;
