@@ -1,7 +1,7 @@
 {
-	"id": "sync-bridge",
+	"id": "obsync-bridge",
 	"name": "SyncBridge",
-	"version": "1.7.3",
+	"version": "1.7.4",
 	"minAppVersion": "1.5.0",
 	"description": "Pull article links from a WeChat Mini Program and archive them as Markdown notes with local images.",
 	"author": "UntilTheEndOfWorld",
