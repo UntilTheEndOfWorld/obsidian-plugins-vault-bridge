@@ -33,7 +33,6 @@ import { downloadRemoteMedia, forceHttpsUrl } from './media-download';
 import { createVaultIO, type VaultIO } from './vault-targets';
 import {
 	detectSource,
-	extractImportableUrl,
 	fetchArticleByUrl,
 	getSourceProfile,
 	type ArticleSource,
@@ -66,10 +65,6 @@ export default class SyncBridgePlugin extends Plugin {
 			await this.syncNow(true);
 		});
 
-		// 剪贴板导入暂时关闭，恢复时取消下面注释
-		// this.addRibbonIcon('clipboard-paste', 'SyncBridge · 剪贴板导入', async () => {
-		// 	await this.importFromClipboard(true);
-		// });
 
 		this.addCommand({
 			id: 'pull-links',
@@ -77,12 +72,6 @@ export default class SyncBridgePlugin extends Plugin {
 			callback: async () => this.syncNow(true),
 		});
 
-		// 剪贴板导入暂时关闭，恢复时取消下面注释。命令 ID 保持 vaultbridge-clipboard-import，不要改名。
-		// this.addCommand({
-		// 	id: 'vaultbridge-clipboard-import',
-		// 	name: 'SyncBridge：剪贴板导入链接',
-		// 	callback: async () => this.importFromClipboard(true),
-		// });
 
 		this.addCommand({
 			id: 'organize-notes',
@@ -448,58 +437,8 @@ export default class SyncBridgePlugin extends Plugin {
 		}
 	}
 
-	/** 剪贴板导入已暂时关闭，入口见 onload 中的注释。恢复入口后此方法可直接使用。 */
-	async importFromClipboard(showNotice = false) {
-		let text = '';
-		try {
-			text = await navigator.clipboard.readText();
-		} catch {
-			if (showNotice) new Notice('无法读取剪贴板');
-			return;
-		}
-		const url = extractImportableUrl(text);
-		if (!url) {
-			if (showNotice) new Notice('剪贴板中未找到可导入链接（微信/腾讯云/阿里云/小红书）');
-			return;
-		}
-		await this.importArticleByUrl(url, showNotice, text);
-	}
-
-	async importArticleByUrl(url: string, showNotice = false, clipboardText?: string) {
-		this.updateStatusBar('syncing');
-		try {
-			const io = this.getTargetIO();
-			const article = await this.fetchArticleLocally(url, clipboardText);
-			const archiveBase = this.resolveArchiveBase(article);
-			const keywordIndex = this.settings.subfolderByAutoKeywords
-				? io.buildKeywordIndex(archiveBase)
-				: undefined;
-
-			const existingPath = io.findPathByFrontmatter('source_url', url);
-			let path: string;
-			if (existingPath) {
-				await this.updateArticle(existingPath, article, io);
-				path = existingPath;
-			} else {
-				path = await this.writeArticle(article, keywordIndex, io);
-			}
-
-			this.updateStatusBar('success');
-			if (showNotice) {
-				const targetHint = io.isExternal ? `\n仓库：${io.label}` : '';
-				const warn = article.parseError ? `\n提示：${article.parseError}` : '';
-				new Notice(`同步文章成功：${article.title}\n${path}${targetHint}${warn}`, warn ? 8000 : 4000);
-			}
-		} catch (error) {
-			this.updateStatusBar('error');
-			if (showNotice) {
-				new Notice(`导入失败：${error instanceof Error ? error.message : String(error)}`);
-			}
-		}
-	}
-
-	private async fetchArticleLocally(url: string, clipboardText?: string): Promise<SyncArticle> {
-		return fetchArticleByUrl(url, { clipboardText });
+	private async fetchArticleLocally(url: string): Promise<SyncArticle> {
+		return fetchArticleByUrl(url);
 	}
 
 	private resolveSource(article: SyncArticle): ArticleSource {

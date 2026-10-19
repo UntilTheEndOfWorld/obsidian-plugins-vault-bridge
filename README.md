@@ -25,7 +25,7 @@ Pull article links from a WeChat Mini Program and archive them into Obsidian as 
 The plugin is not in the community directory yet. To install it now:
 
 1. Download `main.js`, `manifest.json` and `styles.css` from the latest GitHub release.
-2. Create `<your-vault>/.obsidian/plugins/vault-bridge/` and copy the three files into it.
+2. Create `<your-vault>/.obsidian/plugins/obsync-bridge/` and copy the three files into it.
 3. Reload Obsidian, then enable **SyncBridge** in **Settings → Community plugins**.
 
 If you use [BRAT](https://github.com/TfTHacker/obsidian42-brat), add `UntilTheEndOfWorld/obsidian-plugins-vault-bridge` as a beta plugin instead.
@@ -78,6 +78,10 @@ A WeChat Mini Program account is required to claim the pairing code. The service
 
 To let you choose another local vault as the archive target, the plugin reads Obsidian's own `obsidian.json` (in `%APPDATA%` on Windows, `~/Library/Application Support` on macOS, `~/.config` on Linux) to list registered vaults. It writes only into the vault you explicitly select, and only under the configured archive folder.
 
+Inside the vault, the plugin lists the Markdown files under the archive folder to build a keyword index for folder suggestions and to detect notes it has already imported. That scan reads file paths, titles and frontmatter only, never leaves your machine, and is limited to the folder you configure.
+
+The plugin does not read or write the system clipboard.
+
 ## Privacy
 
 See [PRIVACY.md](PRIVACY.md) for what is sent to the service, what stays on your machine, and how to request deletion.
@@ -110,6 +114,8 @@ Built on the [Obsidian sample plugin](https://github.com/obsidianmd/obsidian-sam
 - **需要账号**：用微信小程序认领配对码后才能同步；服务端有每日同步额度，付费方案/邀请码可提高额度。
 - **联网范围**：`https://lycc.ltd/jx_slr_api`（配对、拉取队列、回写同步结果）、文章页面本身、以及文章引用的图片 CDN。没有埋点，没有后台轮询。
 - **库外文件**：为了列出可选的其它本地仓库，会读取 Obsidian 自己的 `obsidian.json`；只会写入你明确选择的那一个仓库。
+- **库内扫描**：会遍历归档目录下的 Markdown 文件，读取路径、标题和 frontmatter，用于关键词目录建议和重复导入判断；数据不出本机，范围限于你配置的目录。
+- **不访问剪贴板**：插件不会读取或写入系统剪贴板。
 - **关键词归档**：形如 `MySQL=数据库`，标题命中 `MySQL` 时写入 `归档目录/数据库/`。
 
-安装：从 Releases 下载 `main.js`、`manifest.json`、`styles.css`，放进 `<库>/.obsidian/plugins/vault-bridge/`，重载 Obsidian 后在“设置 → 第三方插件”启用。
+安装：从 Releases 下载 `main.js`、`manifest.json`、`styles.css`，放进 `<库>/.obsidian/plugins/obsync-bridge/`，重载 Obsidian 后在“设置 → 第三方插件”启用。

@@ -1,6 +1,6 @@
 import { App, FileSystemAdapter, Platform, TFile, TFolder, normalizePath } from 'obsidian';
 import type { VaultKeywordIndex } from './folders';
-import { extractKeywords, MEDIA_SKIP_FOLDERS, MULTI_TOPIC_FOLDER } from './folders';
+import { extractKeywords, MEDIA_SKIP_FOLDERS, UNCATEGORIZED_FOLDER } from './folders';
 import { getFileTitle } from './folder-utils';
 
 export interface VaultOption {
@@ -369,7 +369,7 @@ class ExternalVaultIO implements VaultIO {
 					continue;
 				}
 				if (stat.isDirectory()) {
-					if (name !== MULTI_TOPIC_FOLDER) {
+					if (name !== UNCATEGORIZED_FOLDER) {
 						folderNames.add(name);
 						if (name.trim().length >= 2) {
 							byKeyword.set(name, (byKeyword.get(name) || 0) + 1);

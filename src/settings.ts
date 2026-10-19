@@ -635,10 +635,6 @@ export class SyncBridgeSettingTab extends PluginSettingTab {
 
 		);
 
-		// 剪贴板导入暂时关闭，恢复时取消下面注释
-		// this.actionButton(grid, '剪贴板导入', '读取剪贴板中的微信/腾讯云/阿里云/小红书链接并写入', () =>
-		// 	this.plugin.importFromClipboard(true),
-		// );
 
 		this.actionButton(
 
@@ -697,8 +693,8 @@ export class SyncBridgeSettingTab extends PluginSettingTab {
 		const btn = parent.createDiv({
 			cls: `vb-action-item${danger ? ' vb-action-danger' : ''}${disabled ? ' is-disabled' : ''}`,
 		});
-		btn.createEl('span', { cls: 'vb-action-title', text: title });
-		btn.createEl('span', { cls: 'vb-action-desc', text: desc });
+		btn.createSpan({ cls: 'vb-action-title', text: title });
+		btn.createSpan({ cls: 'vb-action-desc', text: desc });
 		if (disabled) {
 			btn.setAttr('aria-disabled', 'true');
 			return;
