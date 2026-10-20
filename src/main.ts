@@ -285,7 +285,7 @@ export default class SyncBridgePlugin extends Plugin {
 
 	private async runSync(showNotice = false) {
 		if (!this.isPaired()) {
-			if (showNotice) new Notice('尚未配对，请先生成配对码并在小程序认领');
+			if (showNotice) new Notice('尚未配对，请先生成配对码并在（同步文本助手微信）小程序认领');
 			return;
 		}
 		this.updateStatusBar('syncing');
@@ -426,7 +426,7 @@ export default class SyncBridgePlugin extends Plugin {
 			if (isBindAuthLostError(error)) {
 				await this.clearPairingLocal();
 				new Notice(
-					'小程序已解绑或绑定已失效，请重新生成配对码并在小程序认领',
+					'（同步文本助手微信）小程序已解绑或绑定已失效，请重新生成配对码并在（同步文本助手微信）小程序认领',
 					10000,
 				);
 				return;

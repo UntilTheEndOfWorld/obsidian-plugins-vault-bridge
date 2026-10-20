@@ -128,7 +128,7 @@ export class SyncBridgeSettingTab extends PluginSettingTab {
 
 		hero.createEl('p', {
 			cls: 'vb-hero-desc',
-			text: '将微信/腾讯云/阿里云/小红书等链接桥接到本笔记库（小程序拉取）。',
+			text: '将微信/腾讯云/阿里云/小红书等链接桥接到本笔记库（同步文本助手微信小程序拉取）。',
 		});
 
 		if (this.plugin.isPaired()) {
@@ -203,8 +203,8 @@ export class SyncBridgeSettingTab extends PluginSettingTab {
 		bindBox.createEl('p', {
 			cls: 'vb-bind-hint',
 			text: this.plugin.isPaired()
-				? '已配对。重新生成配对码会使旧 Token 作废，需在小程序重新认领并换发新 Token。'
-				: '生成 6 位配对码，在手机小程序中输入完成绑定。',
+				? '已配对。重新生成配对码会使旧 Token 作废，需在（同步文本助手微信）小程序重新认领并换发新 Token。'
+				: '生成 6 位配对码，在手机（同步文本助手微信）小程序中输入完成绑定。',
 		});
 
 		if (this.plugin.isPaired()) {
@@ -226,7 +226,7 @@ export class SyncBridgeSettingTab extends PluginSettingTab {
 						try {
 							const bind = await this.plugin.startBinding();
 							this.bindCode = bind.bindCode || bind.code;
-							this.bindStatus = '等待小程序认领…';
+							this.bindStatus = '等待（同步文本助手微信）小程序认领…';
 							new Notice(`配对码：${this.bindCode}`);
 							this.plugin.pollBinding(this.bindCode, (s) => {
 								this.bindStatus = s?.status || '';

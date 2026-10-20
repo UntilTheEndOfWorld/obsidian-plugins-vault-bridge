@@ -1,6 +1,6 @@
 {
 	"name": "vault-bridge",
-	"version": "1.7.5",
+	"version": "1.7.6",
 	"description": "Sync WeChat Official Account articles into Obsidian via Mini Program binding code",
 	"main": "main.js",
 	"type": "module",
