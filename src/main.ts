@@ -87,7 +87,7 @@ export default class SyncBridgePlugin extends Plugin {
 	}
 
 	async loadSettings() {
-		const loaded = (await this.loadData()) as Partial<SyncBridgeSettings> & {
+		const loaded = ((await this.loadData()) ?? {}) as Partial<SyncBridgeSettings> & {
 			subfolderByKeywords?: boolean;
 			keywordRules?: string;
 			useBuiltinTopicGroups?: boolean;
