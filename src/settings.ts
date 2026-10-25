@@ -266,7 +266,7 @@ export class SyncBridgeSettingTab extends PluginSettingTab {
 		let inviteDraft = '';
 		new Setting(card)
 			.setName('激活码')
-			.setDesc('格式 OBSYNCVIP-加8位。激活后在有效期内无限保存/同步，到期恢复每日 66 篇')
+			.setDesc('如果需要激活码，请添加微信liangyuanc，请注明来意：需要激活码，激活后在有效期内无限保存/同步，到期恢复每日限制篇数')
 			.addText((t) =>
 				t.setPlaceholder('OBSYNCVIP-XXXXXXXX').onChange((v) => {
 					inviteDraft = (v || '').trim();

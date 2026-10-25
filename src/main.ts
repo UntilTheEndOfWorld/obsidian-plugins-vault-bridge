@@ -312,7 +312,7 @@ export default class SyncBridgePlugin extends Plugin {
 			if (articles.length === 0) {
 				this.updateStatusBar('idle');
 				if (showNotice && response?.quotaExhausted) {
-					new Notice('今日同步已达 66 篇上限。会员到期后会恢复该限制，可激活新的激活码或明天再同步');
+					new Notice('今日同步已达上限。会员到期后会恢复该限制，可激活新的激活码或明天再同步');
 				} else if (showNotice) {
 					new Notice(
 						abandoned.length
