@@ -16,13 +16,13 @@ Pull article links from a WeChat Mini Program and archive them into Obsidian as 
 ## Requirements
 
 - Obsidian **1.5.0** or later.
-- **Desktop only.** The plugin uses Node.js file-system APIs (`fs`, `path`) to write into other local vaults and to list them, so it does not run on mobile.
+- **Desktop and mobile.** On desktop the plugin can also write into another local vault, which uses Node.js file-system APIs (`fs`, `path`). On mobile those APIs are unavailable, so the plugin always writes into the current vault and the "target vault" selector is disabled. Everything else — pairing, pulling, Markdown notes, image download — works on both.
 - A WeChat account, to claim the pairing code in the companion Mini Program.
 - Network access to the SyncBridge service and to the article pages you archive.
 
 ## Installation
 
-The plugin is not in the community directory yet. To install it now:
+Install from **Settings → Community plugins → Browse** once SyncBridge is listed. To install it before that:
 
 1. Download `main.js`, `manifest.json` and `styles.css` from the latest GitHub release.
 2. Create `<your-vault>/.obsidian/plugins/obsync-bridge/` and copy the three files into it.
@@ -110,7 +110,7 @@ Built on the [Obsidian sample plugin](https://github.com/obsidianmd/obsidian-sam
 
 把微信小程序里收藏的公众号文章链接拉取到 Obsidian，按你的规则归档成 Markdown，正文和图片都保存在本机。**只支持手动同步**，不会后台轮询。
 
-- **仅桌面端**：插件使用 Node 的文件 API 读写其它本地仓库，移动端不可用。
+- **桌面端与移动端**：桌面端支持写入其它本地仓库（依赖 Node 的 `fs`/`path`）；移动端没有这些 API，会固定写入当前库，“目标仓库”选项自动禁用。配对、拉取、生成 Markdown、下载图片在两端都可用。
 - **需要账号**：用微信小程序认领配对码后才能同步；服务端有每日同步额度，付费方案/邀请码可提高额度。
 - **联网范围**：`https://lycc.ltd/jx_slr_api`（配对、拉取队列、回写同步结果）、文章页面本身、以及文章引用的图片 CDN。没有埋点，没有后台轮询。
 - **库外文件**：为了列出可选的其它本地仓库，会读取 Obsidian 自己的 `obsidian.json`；只会写入你明确选择的那一个仓库。
