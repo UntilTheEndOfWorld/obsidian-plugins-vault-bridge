@@ -7,6 +7,7 @@ Pull article links from a WeChat Mini Program and archive them into Obsidian as 
 - Pair with the companion WeChat Mini Program by entering a short pairing code.
 - Pull pending article links on demand from the ribbon icon or the command palette.
 - Convert WeChat articles into Markdown notes with YAML frontmatter (title, author, account, source URL, published date).
+- Archive other public web articles too — any `http(s)` page with a readable body, such as blog posts at `lusongsong.com`, keeps its text and images.
 - Download images next to your notes and rewrite the links, so notes keep working offline.
 - Archive notes into folders by account, or by keyword rules (for example `MySQL=Database`).
 - Reusable topic profiles that apply the same folder/keyword rules to syncing and re-organizing.
@@ -65,7 +66,7 @@ A note whose title contains `MySQL` is written to `Archive/Database/` (combined 
 SyncBridge talks to the following remote services, and only when you trigger an action:
 
 - **`https://lycc.ltd/jx_slr_api`** (configurable) – pairing, pulling the pending link queue, and reporting per-article sync results.
-- **Article pages** such as `mp.weixin.qq.com`, requested directly from Obsidian to parse the article body.
+- **Article pages** such as `mp.weixin.qq.com`, `cloud.tencent.com`, `developer.aliyun.com`, `xiaohongshu.com`, or any other `http(s)` URL you queue, requested directly from Obsidian to parse the article body.
 - **Image/video CDNs** referenced by those articles, when "Download images locally" is enabled.
 
 There is no client-side telemetry, no analytics SDK, and no background polling.
@@ -112,6 +113,7 @@ Built on the [Obsidian sample plugin](https://github.com/obsidianmd/obsidian-sam
 
 - **桌面端与移动端**：桌面端支持写入其它本地仓库（依赖 Node 的 `fs`/`path`）；移动端没有这些 API，会固定写入当前库，“目标仓库”选项自动禁用。配对、拉取、生成 Markdown、下载图片在两端都可用。
 - **需要账号**：用微信小程序认领配对码后才能同步；服务端有每日同步额度，付费方案/邀请码可提高额度。
+- **通用网页**：除微信/腾讯云/阿里云/小红书外，任意 `http(s)` 文章链接（例如卢松松博客这类 `.html` 页面）也能解析正文并下载图片，归档到「网页文章」目录。
 - **联网范围**：`https://lycc.ltd/jx_slr_api`（配对、拉取队列、回写同步结果）、文章页面本身、以及文章引用的图片 CDN。没有埋点，没有后台轮询。
 - **库外文件**：为了列出可选的其它本地仓库，会读取 Obsidian 自己的 `obsidian.json`；只会写入你明确选择的那一个仓库。
 - **库内扫描**：会遍历归档目录下的 Markdown 文件，读取路径、标题和 frontmatter，用于关键词目录建议和重复导入判断；数据不出本机，范围限于你配置的目录。

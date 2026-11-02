@@ -446,7 +446,8 @@ export default class SyncBridgePlugin extends Plugin {
 			article.source === 'wechat' ||
 			article.source === 'tencent_cloud' ||
 			article.source === 'aliyun' ||
-			article.source === 'xiaohongshu'
+			article.source === 'xiaohongshu' ||
+			article.source === 'web'
 		) {
 			return article.source;
 		}
@@ -464,7 +465,15 @@ export default class SyncBridgePlugin extends Plugin {
 	}
 
 	private resolveMediaReferer(article: SyncArticle): string {
-		return getSourceProfile(this.resolveSource(article), this.settings.syncFolder).referer;
+		const source = this.resolveSource(article);
+		if (source === 'web') {
+			try {
+				return `${new URL(article.sourceUrl || '').origin}/`;
+			} catch {
+				return '';
+			}
+		}
+		return getSourceProfile(source, this.settings.syncFolder).referer;
 	}
 
 	private archiveOptions(article: SyncArticle, keywordIndex?: VaultKeywordIndex) {

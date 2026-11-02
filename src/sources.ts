@@ -10,6 +10,7 @@ export type ArticleSource =
 	| 'tencent_cloud'
 	| 'aliyun'
 	| 'xiaohongshu'
+	| 'web'
 	| 'unknown';
 
 export interface SourceProfile {
@@ -51,6 +52,13 @@ export const SOURCE_PROFILES: Record<Exclude<ArticleSource, 'unknown'>, SourcePr
 		label: '小红书',
 		referer: 'https://www.xiaohongshu.com/',
 	},
+	web: {
+		id: 'web',
+		archiveFolder: '网页文章',
+		mediaFolder: '网页媒体',
+		label: '网页文章',
+		referer: '',
+	},
 };
 
 const BROWSER_UA =
@@ -90,6 +98,7 @@ export function detectSource(url: string): ArticleSource {
 	if (/cloud\.tencent\.(com|cn)\/developer\/article\//.test(u)) return 'tencent_cloud';
 	if (/developer\.aliyun\.com\/article\//.test(u)) return 'aliyun';
 	if (/xiaohongshu\.com|xhslink\.(com|cn)/.test(u)) return 'xiaohongshu';
+	if (/^https?:\/\//.test(u)) return 'web';
 	return 'unknown';
 }
 
@@ -103,6 +112,7 @@ export function getSourceProfile(source: ArticleSource, fallbackSyncFolder?: str
 	if (source === 'tencent_cloud') return SOURCE_PROFILES.tencent_cloud;
 	if (source === 'aliyun') return SOURCE_PROFILES.aliyun;
 	if (source === 'xiaohongshu') return SOURCE_PROFILES.xiaohongshu;
+	if (source === 'web') return SOURCE_PROFILES.web;
 	return {
 		id: 'wechat',
 		archiveFolder: fallbackSyncFolder?.trim() || SOURCE_PROFILES.wechat.archiveFolder,
@@ -153,7 +163,11 @@ export async function fetchArticleByUrl(
 		const parsed = await fetchXiaohongshu(url, options?.clipboardText);
 		return toSyncArticle(url, parsed, source);
 	}
-	throw new Error('暂不支持该链接类型');
+	if (source === 'web') {
+		const parsed = await fetchGenericWeb(url);
+		return toSyncArticle(url, parsed, source);
+	}
+	throw new Error('暂不支持该链接类型（仅支持 http/https 链接）');
 }
 
 function toSyncArticle(
@@ -953,4 +967,168 @@ function dedupe(urls: string[]): string[] {
 		out.push(u);
 	}
 	return out;
+}
+
+// ---------------------------------------------------------------------------
+// 通用网页抓取（任意 http/https 文章页）
+// ---------------------------------------------------------------------------
+
+const CONTENT_SELECTORS = [
+	'article',
+	'.post-content',
+	'.article-content',
+	'.entry-content',
+	'.post-body',
+	'.article-body',
+	'.content-body',
+	'.rich_media_content',
+	'.markdown-body',
+	'#content',
+	'.content',
+	'.nbcontent',
+	'main',
+];
+
+const NOISE_SELECTOR = [
+	'script',
+	'style',
+	'noscript',
+	'iframe',
+	'svg',
+	'form',
+	'nav',
+	'header',
+	'footer',
+	'aside',
+	'[class*="ads-"]',
+	'[class*="advert"]',
+	'[class*="banner"]',
+	'[class*="promo"]',
+	'[class*="share"]',
+	'[class*="related"]',
+	'[class*="recommend"]',
+	'[class*="comment"]',
+	'[id*="comment"]',
+	'[class*="sidebar"]',
+	'[class*="breadcrumb"]',
+].join(',');
+
+async function fetchGenericWeb(
+	url: string,
+): Promise<ParsedWechatArticle & { parseError?: string }> {
+	const response = await requestUrl({
+		url,
+		headers: {
+			'User-Agent': BROWSER_UA,
+			Accept: 'text/html,application/xhtml+xml',
+		},
+	});
+	if (response.status < 200 || response.status >= 300) {
+		throw new Error(`网页抓取失败 HTTP ${response.status}`);
+	}
+	const html = response.text || '';
+	if (!html.trim()) throw new Error('网页内容为空');
+	return parseGenericArticle(html, url);
+}
+
+function parseGenericArticle(
+	html: string,
+	url: string,
+): ParsedWechatArticle & { parseError?: string } {
+	const doc = new DOMParser().parseFromString(html, 'text/html');
+	const title = pickPageTitle(doc);
+	const root = pickContentRoot(doc);
+	const clone = root.cloneNode(true) as Element;
+	clone.querySelectorAll(NOISE_SELECTOR).forEach((el) => el.remove());
+	clone
+		.querySelectorAll('.post-title, .article-title, .entry-title')
+		.forEach((el) => el.remove());
+	absolutizeUrls(clone, url);
+
+	const markdown = convertGenericHtml(clone.innerHTML).trim();
+	return {
+		title,
+		author: metaContent(doc, 'meta[name="author"]'),
+		account: safeHostname(url),
+		markdown,
+		publishedAt: metaContent(doc, 'meta[property="article:published_time"]') || undefined,
+		contentKind: markdown.length > 80 ? 'standard' : 'text_only',
+		parseError: markdown ? undefined : '未能从网页解析出正文',
+	};
+}
+
+function pickPageTitle(doc: Document): string {
+	const og = metaContent(doc, 'meta[property="og:title"], meta[name="twitter:title"]');
+	const raw = og || doc.title || '';
+	const cleaned =
+		stripSiteSuffix(raw) || doc.querySelector('h1')?.textContent?.trim() || '未命名网页文章';
+	return decodeHtml(cleaned);
+}
+
+function stripSiteSuffix(title: string): string {
+	const t = (title || '').trim();
+	const parts = t.split(/\s+[-_|—–]\s+/);
+	if (parts.length > 1) {
+		const head = parts[0]?.trim() || '';
+		if (head.length >= 6) return head;
+	}
+	return t;
+}
+
+function pickContentRoot(doc: Document): Element {
+	let best: Element | null = null;
+	let bestLen = 0;
+	for (const selector of CONTENT_SELECTORS) {
+		for (const el of Array.from(doc.querySelectorAll(selector))) {
+			const len = (el.textContent || '').trim().length;
+			if (len > bestLen) {
+				best = el;
+				bestLen = len;
+			}
+		}
+		if (bestLen >= 300) break;
+	}
+	return best || doc.body;
+}
+
+function absolutizeUrls(root: Element, baseUrl: string): void {
+	const resolve = (value: string): string => {
+		try {
+			return new URL(value, baseUrl).toString();
+		} catch {
+			return value;
+		}
+	};
+	root.querySelectorAll('img').forEach((img) => {
+		const lazy =
+			img.getAttribute('data-src') ||
+			img.getAttribute('data-original') ||
+			img.getAttribute('data-lazy-src');
+		const src = img.getAttribute('src') || '';
+		if (lazy && (!src || src.startsWith('data:'))) img.setAttribute('src', resolve(lazy));
+		else if (src && !src.startsWith('data:')) img.setAttribute('src', resolve(src));
+	});
+	root.querySelectorAll('source, video').forEach((el) => {
+		const src = el.getAttribute('src');
+		if (src) el.setAttribute('src', resolve(src));
+	});
+	root.querySelectorAll('a[href]').forEach((a) => {
+		const href = a.getAttribute('href') || '';
+		if (href && !href.startsWith('#') && !href.toLowerCase().startsWith('javascript:')) {
+			a.setAttribute('href', resolve(href));
+		}
+	});
+}
+
+function metaContent(doc: Document, selector: string): string {
+	const el = doc.querySelector(selector);
+	return decodeHtml(el?.getAttribute('content') || '').trim();
+}
+
+function safeHostname(url: string): string {
+	try {
+		return new URL(url).hostname.replace(/^www\./, '');
+	} catch {
+		return '';
+	}
 }
