@@ -258,8 +258,15 @@ export class SyncBridgeSettingTab extends PluginSettingTab {
 			);
 
 		if (this.bindCode) {
-			const codeEl = bindBox.createDiv({ cls: 'vb-bind-code', text: this.bindCode });
+			const code = this.bindCode.trim();
+			const codeEl = bindBox.createDiv({ cls: 'vb-bind-code', text: code });
 			codeEl.setAttr('aria-label', '配对码');
+			if (code.length !== 6) {
+				bindBox.createDiv({
+					cls: 'vb-bind-warn',
+					text: `配对码应为 6 位，当前只有 ${code.length} 位，请重新生成`,
+				});
+			}
 			bindBox.createDiv({ cls: 'vb-bind-status', text: this.bindStatus });
 		}
 

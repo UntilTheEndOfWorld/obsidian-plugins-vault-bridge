@@ -121,6 +121,27 @@
 	background: var(--background-primary);
 	border: 2px dashed var(--vb-accent);
 	color: var(--vb-accent);
+	white-space: nowrap;
+	user-select: all;
+}
+
+.vb-bind-warn {
+	margin: 0.25rem 0 0;
+	text-align: center;
+	font-size: 0.8rem;
+	color: var(--text-warning);
+}
+
+@media (max-width: 520px) {
+	.vb-settings-root {
+		padding: 1.5rem 0.25rem 1rem;
+	}
+
+	.vb-bind-code {
+		font-size: 1.45rem;
+		letter-spacing: 0.18em;
+		padding: 0.6rem 0.35rem;
+	}
 }
 
 .vb-bind-status {
